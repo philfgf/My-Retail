@@ -1,8 +1,0 @@
-config:
-  myRetailUrl: https://redsky.target.com/v3/pdp/tcin/
-spring:
-  data:
-    mongodb:
-      database: myRetail
-      host: localhost
-      port: 27017

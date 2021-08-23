@@ -1,6 +1,7 @@
 package com.target.myRetail
 
 import com.target.myRetail.config.Configuration
+import com.target.myRetail.service.ProductRepository
 import com.target.myRetail.util.getMyRetailData
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,6 +23,9 @@ class MyRetailTests {
     @Autowired
     lateinit var configuration: Configuration
 
+    @Autowired
+    lateinit var repository: ProductRepository
+
     @Test
     fun `Return server ok status`() {
         val result = testRestTemplate.getForEntity("/health", String::class.java)
@@ -33,9 +37,17 @@ class MyRetailTests {
     @Test
     fun `Get My Retail Data`() {
         val myRetailData = getMyRetailData(
-            "13860428",
+            13860428,
             configuration
         )
-        println(myRetailData)
+        assertEquals("13860428", myRetailData.product.availableToPromiseNetwork.productId,
+            "The product ID is incorrect")
+    }
+
+
+    @Test
+    fun `Get Product Data`() {
+        val productData = repository.findByProductId(13860428).get()
+        assertEquals(13860428, productData.productId,"The product ID is incorrect")
     }
 }

@@ -8,19 +8,13 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
 
-fun getMyRetailData(productId: String, configuration: Configuration): MyRetailData {
+fun getMyRetailData(productId: Int, configuration: Configuration): MyRetailData {
     val logger = LogManager.getLogger(MyRetail::class.java)
     val webClient = WebClient.create(configuration.myRetailUrl)
     return try {
         val result = webClient.get()
-            .uri { builder ->
-                builder
-                    .path(
-                        "$productId?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews," +
-                            "rating_and_review_statistics,question_answer_statistics&key=candidate"
-                    )
-                    .build()
-            }
+            .uri("$productId?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews," +
+                            "rating_and_review_statistics,question_answer_statistics&key=candidate")
             .retrieve()
             .bodyToMono(MyRetailData::class.java)
         result.block()!!
